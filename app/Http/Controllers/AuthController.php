@@ -40,9 +40,16 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credetials)) {
-            return redirect('/')->with('success', 'Login Success');
+            return redirect('/home')->with('success', 'Login Success');
         }
 
         return back()->with('error', 'Error Email or Password');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect()->route('login');
     }
 }
