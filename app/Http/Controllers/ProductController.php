@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 // export csv import Storage
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class ProductController extends Controller
 {
@@ -108,5 +109,35 @@ class ProductController extends Controller
 
         }
     }
+
+    // Start Generate PDF==========================================================================
+    public function generatePDF()
+    {
+        // Get products from the database
+        $products = Product::limit(100)->get();
+        
+        // Generate the PDF view
+        $pdf = PDF::loadView('PDF.Products', compact('products'));
+
+        // Customize the PDF settings (optional)
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'isFontSubsettingEnabled' => true,
+        ]);
+        $pdf->getDomPDF()->setHttpContext(
+            stream_context_create([
+                'ssl' => [
+                    'allow_self_signed' => TRUE,
+                    'verify_peer' => FALSE,
+                    'verify_peer_name' => FALSE,
+                ]
+            ])
+        );
+
+        // Save or display the PDF (as needed)
+        return $pdf->stream('product_list.pdf');
+    }
+    // End Generate PDF==========================================================================
 
 }

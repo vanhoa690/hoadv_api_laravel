@@ -26,3 +26,4 @@ Route::put('products/edit/{id}', [ProductController::class, 'edit']);
 Route::delete('products/{id}', [ProductController::class, 'delete']);
 
 Route::get('export-csv', [ProductController::class, 'exportToCSV']);
+Route::get('generate-pdf', [ProductController::class, 'generatePDF']);
